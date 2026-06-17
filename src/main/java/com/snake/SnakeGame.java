@@ -1,26 +1,157 @@
 package com.snake;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 
-// main app class. for now it just clears the screen to a dark green
-// so we know the window + render loop actually work. real game comes next.
-public class SnakeGame extends ApplicationAdapter {
+// main app class. it owns shared drawing tools and starts on the menu screen.
+public class SnakeGame extends Game {
+    private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
+    private BitmapFont font;
 
     @Override
     public void create() {
-        // nothing yet
-    }
+        batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
+        font = new BitmapFont();
+        font.getData().setScale(2f);
 
-    @Override
-    public void render() {
-        Gdx.gl.glClearColor(0.15f, 0.35f, 0.15f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        setScreen(new MainMenuScreen(this));
     }
 
     @Override
     public void dispose() {
-        // nothing to clean up yet
+        if (getScreen() != null) {
+            getScreen().dispose();
+        }
+
+        batch.dispose();
+        shapeRenderer.dispose();
+        font.dispose();
+    }
+
+    SpriteBatch getBatch() {
+        return batch;
+    }
+
+    ShapeRenderer getShapeRenderer() {
+        return shapeRenderer;
+    }
+
+    BitmapFont getFont() {
+        return font;
+    }
+}
+
+class MainMenuScreen extends ScreenAdapter {
+    private static final float BUTTON_WIDTH = 220f;
+    private static final float BUTTON_HEIGHT = 56f;
+
+    private final SnakeGame game;
+    private final GlyphLayout layout = new GlyphLayout();
+    private final Rectangle newGameButton = new Rectangle();
+    private final Rectangle exitButton = new Rectangle();
+    private final Vector3 mousePosition = new Vector3();
+
+    MainMenuScreen(SnakeGame game) {
+        this.game = game;
+        updateButtonPositions();
+    }
+
+    @Override
+    public void render(float delta) {
+        handleInput();
+
+        Gdx.gl.glClearColor(0.12f, 0.25f, 0.16f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        drawButtons();
+        drawText();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        updateButtonPositions();
+    }
+
+    private void handleInput() {
+        if (!Gdx.input.justTouched()) {
+            return;
+        }
+
+        mousePosition.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
+        mousePosition.y = Gdx.graphics.getHeight() - mousePosition.y;
+
+        if (newGameButton.contains(mousePosition.x, mousePosition.y)) {
+            game.setScreen(new GameScreen(game));
+        } else if (exitButton.contains(mousePosition.x, mousePosition.y)) {
+            Gdx.app.exit();
+        }
+    }
+
+    private void updateButtonPositions() {
+        float centerX = Gdx.graphics.getWidth() / 2f - BUTTON_WIDTH / 2f;
+        float centerY = Gdx.graphics.getHeight() / 2f;
+
+        newGameButton.set(centerX, centerY - 20f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        exitButton.set(centerX, centerY - 92f, BUTTON_WIDTH, BUTTON_HEIGHT);
+    }
+
+    private void drawButtons() {
+        ShapeRenderer shapes = game.getShapeRenderer();
+        shapes.begin(ShapeRenderer.ShapeType.Filled);
+        shapes.setColor(0.32f, 0.62f, 0.31f, 1f);
+        shapes.rect(newGameButton.x, newGameButton.y, newGameButton.width, newGameButton.height);
+        shapes.setColor(0.24f, 0.43f, 0.25f, 1f);
+        shapes.rect(exitButton.x, exitButton.y, exitButton.width, exitButton.height);
+        shapes.end();
+    }
+
+    private void drawText() {
+        SpriteBatch batch = game.getBatch();
+        BitmapFont font = game.getFont();
+
+        batch.begin();
+        font.setColor(Color.WHITE);
+        drawCenteredText(batch, font, "SNAKE", Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f + 105f);
+        drawCenteredText(batch, font, "New Game", newGameButton.x + newGameButton.width / 2f, newGameButton.y + 36f);
+        drawCenteredText(batch, font, "Exit", exitButton.x + exitButton.width / 2f, exitButton.y + 36f);
+        batch.end();
+    }
+
+    private void drawCenteredText(SpriteBatch batch, BitmapFont font, String text, float x, float y) {
+        layout.setText(font, text);
+        font.draw(batch, text, x - layout.width / 2f, y);
+    }
+}
+
+class GameScreen extends ScreenAdapter {
+    private final SnakeGame game;
+
+    GameScreen(SnakeGame game) {
+        this.game = game;
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0.08f, 0.18f, 0.12f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        SpriteBatch batch = game.getBatch();
+        BitmapFont font = game.getFont();
+
+        batch.begin();
+        font.setColor(Color.WHITE);
+        font.draw(batch, "Game starts next", 24f, Gdx.graphics.getHeight() - 24f);
+        batch.end();
     }
 }

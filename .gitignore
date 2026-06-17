@@ -1,16 +1,17 @@
 # gradle
-.gradle/
 build/
+.gradle/
 
 # ide
-.idea/
 *.iml
-.vscode/
+.idea/
 *.classpath
+.vscode/
+out/
 *.project
 bin/
-out/
+context.md
 
 # os
-.DS_Store
 Thumbs.db
+.DS_Store
