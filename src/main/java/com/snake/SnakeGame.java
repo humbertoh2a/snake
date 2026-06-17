@@ -133,25 +133,3 @@ class MainMenuScreen extends ScreenAdapter {
         font.draw(batch, text, x - layout.width / 2f, y);
     }
 }
-
-class GameScreen extends ScreenAdapter {
-    private final SnakeGame game;
-
-    GameScreen(SnakeGame game) {
-        this.game = game;
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0.08f, 0.18f, 0.12f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        SpriteBatch batch = game.getBatch();
-        BitmapFont font = game.getFont();
-
-        batch.begin();
-        font.setColor(Color.WHITE);
-        font.draw(batch, "Game starts next", 24f, Gdx.graphics.getHeight() - 24f);
-        batch.end();
-    }
-}
