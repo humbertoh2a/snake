@@ -16,11 +16,13 @@ class GameScreen extends ScreenAdapter {
 
     private final SnakeGame game;
     private final Snake snake;
+    private final Food food;
     private float moveTimer;
 
     GameScreen(SnakeGame game) {
         this.game = game;
         this.snake = new Snake(COLUMNS / 2, ROWS / 2);
+        this.food = new Food(COLUMNS, ROWS, snake);
     }
 
     @Override
@@ -33,6 +35,7 @@ class GameScreen extends ScreenAdapter {
 
         BoardMetrics board = getBoardMetrics();
         drawBoard(board);
+        drawFood(board);
         drawSnake(board);
         drawHud();
     }
@@ -53,12 +56,20 @@ class GameScreen extends ScreenAdapter {
         moveTimer += delta;
 
         if (moveTimer >= MOVE_INTERVAL) {
-            snake.move(COLUMNS, ROWS);
+            // check food before moving so the snake grows on this exact step
+            boolean ateFood = snake.getNextHead().equals(food.getPosition());
+            snake.move(COLUMNS, ROWS, ateFood);
+
+            if (ateFood) {
+                food.respawn(COLUMNS, ROWS, snake);
+            }
+
             moveTimer = 0f;
         }
     }
 
     private BoardMetrics getBoardMetrics() {
+        // keeps the grid centered even if the window size changes
         float availableWidth = Gdx.graphics.getWidth() - 80f;
         float availableHeight = Gdx.graphics.getHeight() - 120f;
         float cellSize = Math.min(availableWidth / COLUMNS, availableHeight / ROWS);
@@ -94,13 +105,28 @@ class GameScreen extends ScreenAdapter {
         shapes.end();
     }
 
+    private void drawFood(BoardMetrics board) {
+        ShapeRenderer shapes = game.getShapeRenderer();
+        GridPosition position = food.getPosition();
+        float padding = board.cellSize * 0.18f;
+
+        shapes.begin(ShapeRenderer.ShapeType.Filled);
+        shapes.setColor(0.86f, 0.18f, 0.18f, 1f);
+        shapes.circle(
+            board.startX + position.x * board.cellSize + board.cellSize / 2f,
+            board.startY + position.y * board.cellSize + board.cellSize / 2f,
+            board.cellSize / 2f - padding
+        );
+        shapes.end();
+    }
+
     private void drawSnake(BoardMetrics board) {
         ShapeRenderer shapes = game.getShapeRenderer();
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
 
         for (GridPosition part : snake.getBody()) {
-            boolean isHead = part == snake.getHead();
+            boolean isHead = part.equals(snake.getHead());
             shapes.setColor(isHead ? new Color(0.61f, 0.91f, 0.43f, 1f) : new Color(0.34f, 0.75f, 0.29f, 1f));
             shapes.rect(
                 board.startX + part.x * board.cellSize + 2f,

@@ -1,5 +1,7 @@
 package com.snake;
 
+import java.util.Objects;
+
 class GridPosition {
     final int x;
     final int y;
@@ -11,5 +13,24 @@ class GridPosition {
 
     GridPosition move(Direction direction) {
         return new GridPosition(x + direction.dx, y + direction.dy);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof GridPosition)) {
+            return false;
+        }
+
+        GridPosition position = (GridPosition) other;
+        return x == position.x && y == position.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

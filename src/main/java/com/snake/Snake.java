@@ -20,8 +20,12 @@ class Snake {
         }
     }
 
-    void move(int columns, int rows) {
-        GridPosition nextHead = getHead().move(direction);
+    GridPosition getNextHead() {
+        return getHead().move(direction);
+    }
+
+    void move(int columns, int rows, boolean grow) {
+        GridPosition nextHead = getNextHead();
 
         // walls will wrap later, so for now the snake just waits at the edge.
         if (nextHead.x < 0 || nextHead.x >= columns || nextHead.y < 0 || nextHead.y >= rows) {
@@ -29,11 +33,19 @@ class Snake {
         }
 
         body.add(0, nextHead);
-        body.remove(body.size() - 1);
+
+        // growing means keeping the tail for one move
+        if (!grow) {
+            body.remove(body.size() - 1);
+        }
     }
 
     GridPosition getHead() {
         return body.get(0);
+    }
+
+    boolean contains(GridPosition position) {
+        return body.contains(position);
     }
 
     List<GridPosition> getBody() {
