@@ -20,17 +20,13 @@ class Snake {
         }
     }
 
-    GridPosition getNextHead() {
-        return getHead().move(direction);
+    GridPosition getNextHead(int columns, int rows) {
+        return getHead().move(direction).wrap(columns, rows);
     }
 
     void move(int columns, int rows, boolean grow) {
-        GridPosition nextHead = getNextHead();
-
-        // walls will wrap later, so for now the snake just waits at the edge.
-        if (nextHead.x < 0 || nextHead.x >= columns || nextHead.y < 0 || nextHead.y >= rows) {
-            return;
-        }
+        // leaving one side of the board brings the head back on the opposite side
+        GridPosition nextHead = getNextHead(columns, rows);
 
         body.add(0, nextHead);
 

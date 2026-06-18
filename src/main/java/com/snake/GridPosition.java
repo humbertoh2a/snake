@@ -15,6 +15,12 @@ class GridPosition {
         return new GridPosition(x + direction.dx, y + direction.dy);
     }
 
+    GridPosition wrap(int columns, int rows) {
+        int wrappedX = (x + columns) % columns;
+        int wrappedY = (y + rows) % rows;
+        return new GridPosition(wrappedX, wrappedY);
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {
