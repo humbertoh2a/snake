@@ -44,6 +44,19 @@ class Snake {
         return body.contains(position);
     }
 
+    boolean willHitItself(GridPosition nextHead, boolean grow) {
+        int lastIndex = grow ? body.size() : body.size() - 1;
+
+        // when not growing, the tail moves away, so that cell is still safe
+        for (int i = 0; i < lastIndex; i++) {
+            if (body.get(i).equals(nextHead)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     List<GridPosition> getBody() {
         return Collections.unmodifiableList(body);
     }

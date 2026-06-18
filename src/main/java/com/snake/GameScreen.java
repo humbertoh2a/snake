@@ -57,7 +57,14 @@ class GameScreen extends ScreenAdapter {
 
         if (moveTimer >= MOVE_INTERVAL) {
             // check food before moving so the snake grows on this exact step
-            boolean ateFood = snake.getNextHead(COLUMNS, ROWS).equals(food.getPosition());
+            GridPosition nextHead = snake.getNextHead(COLUMNS, ROWS);
+            boolean ateFood = nextHead.equals(food.getPosition());
+
+            if (snake.willHitItself(nextHead, ateFood)) {
+                game.setScreen(new GameOverScreen(game));
+                return;
+            }
+
             snake.move(COLUMNS, ROWS, ateFood);
 
             if (ateFood) {
