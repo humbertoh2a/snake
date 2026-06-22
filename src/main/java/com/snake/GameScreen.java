@@ -18,6 +18,7 @@ class GameScreen extends ScreenAdapter {
     private final Snake snake;
     private final Food food;
     private float moveTimer;
+    private int score;
 
     GameScreen(SnakeGame game) {
         this.game = game;
@@ -68,6 +69,8 @@ class GameScreen extends ScreenAdapter {
             snake.move(COLUMNS, ROWS, ateFood);
 
             if (ateFood) {
+                // score is just the amount of food eaten
+                score++;
                 food.respawn(COLUMNS, ROWS, snake);
             }
 
@@ -152,7 +155,8 @@ class GameScreen extends ScreenAdapter {
 
         batch.begin();
         font.setColor(Color.WHITE);
-        font.draw(batch, "Use arrow keys", 24f, Gdx.graphics.getHeight() - 24f);
+        font.draw(batch, "Score: " + score, 24f, Gdx.graphics.getHeight() - 24f);
+        font.draw(batch, "Use arrow keys", 24f, Gdx.graphics.getHeight() - 58f);
         batch.end();
     }
 
