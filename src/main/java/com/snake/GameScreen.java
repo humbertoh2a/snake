@@ -62,7 +62,7 @@ class GameScreen extends ScreenAdapter {
             boolean ateFood = nextHead.equals(food.getPosition());
 
             if (snake.willHitItself(nextHead, ateFood)) {
-                game.setScreen(new GameOverScreen(game));
+                game.setScreen(new GameOverScreen(game, score));
                 return;
             }
 
