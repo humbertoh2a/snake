@@ -11,6 +11,7 @@ out/
 *.project
 bin/
 context.md
+highscores.txt
 
 # os
 Thumbs.db

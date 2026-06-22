@@ -17,6 +17,7 @@ public class SnakeGame extends Game {
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private BitmapFont font;
+    private HighScoreManager highScoreManager;
 
     @Override
     public void create() {
@@ -24,6 +25,7 @@ public class SnakeGame extends Game {
         shapeRenderer = new ShapeRenderer();
         font = new BitmapFont();
         font.getData().setScale(2f);
+        highScoreManager = new HighScoreManager();
 
         setScreen(new MainMenuScreen(this));
     }
@@ -50,6 +52,10 @@ public class SnakeGame extends Game {
     BitmapFont getFont() {
         return font;
     }
+
+    HighScoreManager getHighScoreManager() {
+        return highScoreManager;
+    }
 }
 
 class MainMenuScreen extends ScreenAdapter {
@@ -59,6 +65,7 @@ class MainMenuScreen extends ScreenAdapter {
     private final SnakeGame game;
     private final GlyphLayout layout = new GlyphLayout();
     private final Rectangle newGameButton = new Rectangle();
+    private final Rectangle highScoresButton = new Rectangle();
     private final Rectangle exitButton = new Rectangle();
     private final Vector3 mousePosition = new Vector3();
 
@@ -93,6 +100,8 @@ class MainMenuScreen extends ScreenAdapter {
 
         if (newGameButton.contains(mousePosition.x, mousePosition.y)) {
             game.setScreen(new GameScreen(game));
+        } else if (highScoresButton.contains(mousePosition.x, mousePosition.y)) {
+            game.setScreen(new HighScoreScreen(game));
         } else if (exitButton.contains(mousePosition.x, mousePosition.y)) {
             Gdx.app.exit();
         }
@@ -102,8 +111,9 @@ class MainMenuScreen extends ScreenAdapter {
         float centerX = Gdx.graphics.getWidth() / 2f - BUTTON_WIDTH / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
 
-        newGameButton.set(centerX, centerY - 20f, BUTTON_WIDTH, BUTTON_HEIGHT);
-        exitButton.set(centerX, centerY - 92f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        newGameButton.set(centerX, centerY + 10f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        highScoresButton.set(centerX, centerY - 62f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        exitButton.set(centerX, centerY - 134f, BUTTON_WIDTH, BUTTON_HEIGHT);
     }
 
     private void drawButtons() {
@@ -111,6 +121,8 @@ class MainMenuScreen extends ScreenAdapter {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(0.32f, 0.62f, 0.31f, 1f);
         shapes.rect(newGameButton.x, newGameButton.y, newGameButton.width, newGameButton.height);
+        shapes.setColor(0.28f, 0.52f, 0.33f, 1f);
+        shapes.rect(highScoresButton.x, highScoresButton.y, highScoresButton.width, highScoresButton.height);
         shapes.setColor(0.24f, 0.43f, 0.25f, 1f);
         shapes.rect(exitButton.x, exitButton.y, exitButton.width, exitButton.height);
         shapes.end();
@@ -122,8 +134,9 @@ class MainMenuScreen extends ScreenAdapter {
 
         batch.begin();
         font.setColor(Color.WHITE);
-        drawCenteredText(batch, font, "SNAKE", Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f + 105f);
+        drawCenteredText(batch, font, "SNAKE", Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f + 130f);
         drawCenteredText(batch, font, "New Game", newGameButton.x + newGameButton.width / 2f, newGameButton.y + 36f);
+        drawCenteredText(batch, font, "High Scores", highScoresButton.x + highScoresButton.width / 2f, highScoresButton.y + 36f);
         drawCenteredText(batch, font, "Exit", exitButton.x + exitButton.width / 2f, exitButton.y + 36f);
         batch.end();
     }

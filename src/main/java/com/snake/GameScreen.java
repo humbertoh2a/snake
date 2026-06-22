@@ -62,6 +62,10 @@ class GameScreen extends ScreenAdapter {
             boolean ateFood = nextHead.equals(food.getPosition());
 
             if (snake.willHitItself(nextHead, ateFood)) {
+                if (score > 0) {
+                    game.getHighScoreManager().saveScore(score);
+                }
+
                 game.setScreen(new GameOverScreen(game, score));
                 return;
             }
@@ -80,13 +84,13 @@ class GameScreen extends ScreenAdapter {
 
     private BoardMetrics getBoardMetrics() {
         // keeps the grid centered even if the window size changes
-        float availableWidth = Gdx.graphics.getWidth() - 80f;
-        float availableHeight = Gdx.graphics.getHeight() - 120f;
+        float availableWidth = Gdx.graphics.getWidth() - 120f;
+        float availableHeight = Gdx.graphics.getHeight() - 150f;
         float cellSize = Math.min(availableWidth / COLUMNS, availableHeight / ROWS);
         float boardWidth = cellSize * COLUMNS;
         float boardHeight = cellSize * ROWS;
         float startX = (Gdx.graphics.getWidth() - boardWidth) / 2f;
-        float startY = 48f;
+        float startY = 56f;
 
         return new BoardMetrics(startX, startY, cellSize, boardWidth, boardHeight);
     }
@@ -112,6 +116,8 @@ class GameScreen extends ScreenAdapter {
             shapes.line(board.startX, lineY, board.startX + board.width, lineY);
         }
 
+        shapes.setColor(0.45f, 0.72f, 0.38f, 1f);
+        shapes.rect(board.startX, board.startY, board.width, board.height);
         shapes.end();
     }
 
@@ -155,8 +161,8 @@ class GameScreen extends ScreenAdapter {
 
         batch.begin();
         font.setColor(Color.WHITE);
-        font.draw(batch, "Score: " + score, 24f, Gdx.graphics.getHeight() - 24f);
-        font.draw(batch, "Use arrow keys", 24f, Gdx.graphics.getHeight() - 58f);
+        font.draw(batch, "Score: " + score, 48f, Gdx.graphics.getHeight() - 36f);
+        font.draw(batch, "Use arrow keys", 48f, Gdx.graphics.getHeight() - 72f);
         batch.end();
     }
 

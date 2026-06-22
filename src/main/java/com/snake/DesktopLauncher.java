@@ -8,7 +8,7 @@ public class DesktopLauncher {
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Snake");
-        config.setWindowedMode(640, 480);
+        config.setWindowedMode(800, 600);
         config.setForegroundFPS(60);
         new Lwjgl3Application(new SnakeGame(), config);
     }

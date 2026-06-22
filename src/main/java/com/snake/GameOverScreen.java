@@ -74,8 +74,8 @@ class GameOverScreen extends ScreenAdapter {
         float centerX = Gdx.graphics.getWidth() / 2f - BUTTON_WIDTH / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
 
-        playAgainButton.set(centerX, centerY - 30f, BUTTON_WIDTH, BUTTON_HEIGHT);
-        exitButton.set(centerX, centerY - 102f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        playAgainButton.set(centerX, centerY - 18f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        exitButton.set(centerX, centerY - 90f, BUTTON_WIDTH, BUTTON_HEIGHT);
     }
 
     private void drawButtons() {
@@ -94,8 +94,8 @@ class GameOverScreen extends ScreenAdapter {
 
         batch.begin();
         font.setColor(Color.WHITE);
-        drawCenteredText(batch, font, "Game Over", Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f + 112f);
-        drawCenteredText(batch, font, "Final Score: " + finalScore, Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f + 58f);
+        drawCenteredText(batch, font, "Game Over", Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f + 134f);
+        drawCenteredText(batch, font, "Final Score: " + finalScore, Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f + 74f);
         drawCenteredText(batch, font, "Play Again", playAgainButton.x + playAgainButton.width / 2f, playAgainButton.y + 36f);
         drawCenteredText(batch, font, "Exit", exitButton.x + exitButton.width / 2f, exitButton.y + 36f);
         batch.end();
