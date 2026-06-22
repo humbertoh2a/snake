@@ -161,8 +161,8 @@ class GameScreen extends ScreenAdapter {
 
         batch.begin();
         font.setColor(Color.WHITE);
-        font.draw(batch, "Score: " + score, 48f, Gdx.graphics.getHeight() - 36f);
-        font.draw(batch, "Use arrow keys", 48f, Gdx.graphics.getHeight() - 72f);
+        font.draw(batch, "Score: " + score, 48f, Gdx.graphics.getHeight() - 24f);
+        font.draw(batch, "Use arrow keys", 48f, Gdx.graphics.getHeight() - 60f);
         batch.end();
     }
 
